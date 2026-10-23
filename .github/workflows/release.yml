@@ -36,9 +36,22 @@ jobs:
       - name: Package Windows
         run: npx electron-builder --win --x64 --publish=never
 
+      # Release notes = this version's section of CHANGELOG.md.
+      - name: Extract release notes
+        shell: bash
+        run: |
+          ver="${GITHUB_REF_NAME#v}"
+          awk -v v="$ver" '
+            /^## \[/ { if (on) exit; if (index($0, "## [" v "]") == 1) { on = 1; next } }
+            on { print }
+          ' CHANGELOG.md > release-notes.md
+          cat release-notes.md
+
       - name: Upload Windows artifacts
         uses: softprops/action-gh-release@v2
         with:
+          name: RM Browser ${{ github.ref_name }}
+          body_path: release-notes.md
           draft: false
           prerelease: false
           files: |
@@ -75,7 +88,7 @@ jobs:
         run: npm run build:renderer
 
       - name: Package Linux
-        run: npx electron-builder --linux --x64 --publish=never
+        run: npx electron-builder --linux --x64 --arm64 --publish=never
 
       - name: Upload Linux artifacts
         uses: softprops/action-gh-release@v2
