@@ -2,7 +2,7 @@
 
 > Cloudflare Zero Trust connection manager for Windows, Linux, and macOS
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/DubaiiTM/RM-Browser/releases)
+[![Version](https://img.shields.io/badge/version-1.0.1-blue.svg)](https://github.com/DubaiiTM/RM-Browser/releases)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)](#platform-support)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
@@ -20,7 +20,7 @@ RM Browser is a desktop application that lets you manage Cloudflare Access tunne
 
 ### New in RM Browser
 
-- **Privacy mode (blur)** — hostnames, IP addresses, usernames, SSH key paths, jump hosts, notes, account data and the matching form fields are blurred, so you can share your screen or stream without leaking infrastructure details. Hover over a value (or focus an input) to reveal it. On by default; toggle in **Settings → General** or with `Ctrl+Shift+H`.
+- **Privacy mode (blur)** — hostnames, IP addresses, usernames, SSH key paths, jump hosts, notes, account data and the matching form fields are blurred, so you can share your screen or stream without leaking infrastructure details. Click a value to reveal it, click again to hide it (inputs reveal while you type in them). On by default; toggle in **Settings → General** or with `Ctrl+Shift+H`.
 - **Connection name as RDP window title** — when you connect to a remote machine, the RDP window shows the name you saved for the connection instead of the local tunnel address (e.g. `Office PC - Remote Desktop Connection` instead of `127.0.0.2:51234 - Remote Desktop Connection`). Works on Windows (mstsc), Linux (FreeRDP `/t:`) and macOS (.rdp file name).
 
 ### Connection types

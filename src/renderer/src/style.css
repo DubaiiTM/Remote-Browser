@@ -286,13 +286,15 @@ body {
 
 /* ─── Privacy mode ───────────────────────────────────────────────────────────
    Blurs identifying details (hostnames, IPs, usernames, keys, account data).
-   Hover or focus reveals an element. Toggle: Settings or Ctrl+Shift+H. */
-[data-privacy="on"] .sensitive,
-[data-privacy="on"] .tunnel-item-host,
-[data-privacy="on"] .detail-subtitle,
-[data-privacy="on"] .prop-notes,
-[data-privacy="on"] .auth-user-name,
-[data-privacy="on"] .auth-user-email,
+   Click a value to reveal it (click again to hide); inputs reveal while focused.
+   Toggle: Settings or Ctrl+Shift+H. Keep the selector list in sync with
+   SENSITIVE_SELECTOR in main.ts. */
+[data-privacy="on"] .sensitive:not(.revealed),
+[data-privacy="on"] .tunnel-item-host:not(.revealed),
+[data-privacy="on"] .detail-subtitle:not(.revealed),
+[data-privacy="on"] .prop-notes:not(.revealed),
+[data-privacy="on"] .auth-user-name:not(.revealed),
+[data-privacy="on"] .auth-user-email:not(.revealed),
 [data-privacy="on"] #hostname:not(:focus),
 [data-privacy="on"] #cred-username:not(:focus),
 [data-privacy="on"] #ssh-key-path:not(:focus),
@@ -304,14 +306,13 @@ body {
   filter: blur(5px);
   transition: filter 0.15s ease;
 }
-[data-privacy="on"] .sensitive:hover,
-[data-privacy="on"] .tunnel-item-host:hover,
-[data-privacy="on"] .detail-subtitle:hover,
-[data-privacy="on"] .prop-notes:hover,
-[data-privacy="on"] .auth-user-name:hover,
-[data-privacy="on"] .auth-user-email:hover,
-[data-privacy="on"] input:hover {
-  filter: none;
+[data-privacy="on"] .sensitive,
+[data-privacy="on"] .tunnel-item-host,
+[data-privacy="on"] .detail-subtitle,
+[data-privacy="on"] .prop-notes,
+[data-privacy="on"] .auth-user-name,
+[data-privacy="on"] .auth-user-email {
+  cursor: pointer;
 }
 
 .tunnel-item-host {

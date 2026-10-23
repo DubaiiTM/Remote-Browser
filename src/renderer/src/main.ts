@@ -331,9 +331,52 @@ function applyTheme(theme: "dark" | "light" | "system") {
 }
 
 // Privacy mode blurs hostnames, IPs, usernames and other identifying details
-// (see the [data-privacy] rules in style.css). Hovering an element reveals it.
+// (see the [data-privacy] rules in style.css). Clicking a value reveals it,
+// clicking again hides it. Reveals are remembered by text so they survive the
+// frequent re-renders of the sidebar, detail view and debug panel.
+const SENSITIVE_SELECTOR =
+  ".sensitive, .tunnel-item-host, .detail-subtitle, .prop-notes, .auth-user-name, .auth-user-email";
+const revealedValues = new Set<string>();
+
+function applyReveals() {
+  document.querySelectorAll<HTMLElement>(SENSITIVE_SELECTOR).forEach((el) => {
+    el.classList.toggle("revealed", revealedValues.has(el.textContent?.trim() ?? ""));
+  });
+}
+
+let revealFrame = 0;
+new MutationObserver(() => {
+  if (revealedValues.size === 0 || revealFrame) return;
+  revealFrame = requestAnimationFrame(() => {
+    revealFrame = 0;
+    applyReveals();
+  });
+}).observe(document.documentElement, { childList: true, subtree: true });
+
+// Capture phase: a click on a blurred value only toggles it, so it doesn't
+// also select the connection in the sidebar.
+document.addEventListener(
+  "click",
+  (e) => {
+    if (document.documentElement.dataset.privacy !== "on") return;
+    const el = (e.target as HTMLElement).closest<HTMLElement>(SENSITIVE_SELECTOR);
+    if (!el) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const key = el.textContent?.trim() ?? "";
+    if (revealedValues.has(key)) revealedValues.delete(key);
+    else revealedValues.add(key);
+    applyReveals();
+  },
+  true,
+);
+
 function applyPrivacy(on: boolean) {
-  document.documentElement.dataset.privacy = on ? "on" : "off";
+  const value = on ? "on" : "off";
+  if (document.documentElement.dataset.privacy === value) return;
+  document.documentElement.dataset.privacy = value;
+  revealedValues.clear();
+  applyReveals();
 }
 
 async function togglePrivacy() {
@@ -3537,7 +3580,7 @@ function renderSettingsPanel() {
         <div class="settings-row">
           <div class="settings-row-label">
             <span class="settings-label">Privacy mode</span>
-            <span class="settings-desc">Blur hostnames, IPs, usernames and other sensitive details. Hover to reveal. Toggle anytime with Ctrl+Shift+H.</span>
+            <span class="settings-desc">Blur hostnames, IPs, usernames and other sensitive details. Click a value to reveal it. Toggle anytime with Ctrl+Shift+H.</span>
           </div>
           <label class="toggle">
             <input type="checkbox" id="s-privacy-mode" ${(s.privacyMode ?? true) ? "checked" : ""}>

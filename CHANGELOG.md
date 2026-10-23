@@ -5,6 +5,12 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-10-23
+
+### Changed
+
+- Privacy mode: blurred values are now revealed by clicking (click again to hide) instead of hovering.
+
 ## [1.0.0] - 2026-10-23
 
 First release of RM Browser, based on TunnelDesk 3.0.0.
