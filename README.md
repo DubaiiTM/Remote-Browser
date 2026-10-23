@@ -1,14 +1,14 @@
-# TunnelDesk
+# RM Browser
 
 > Cloudflare Zero Trust connection manager for Windows, Linux, and macOS
 
-[![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)](https://github.com/5djr/TunnelDesk/releases)
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/DubaiiTM/RM-Browser/releases)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)](#platform-support)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-TunnelDesk is a desktop application that lets you manage Cloudflare Access tunnels, direct SSH, RDP, Telnet, and HTTP connections from a single interface. Credentials are encrypted at rest with the platform keychain. Enterprise deployments support Entra ID sign-in, Group Policy, and org config sync.
+RM Browser is a desktop application that lets you manage Cloudflare Access tunnels, direct SSH, RDP, Telnet, and HTTP connections from a single interface. Credentials are encrypted at rest with the platform keychain. Enterprise deployments support Entra ID sign-in, Group Policy, and org config sync.
 
-> **Disclaimer:** TunnelDesk is an independent, open-source project and is not affiliated with, endorsed by, or sponsored by Cloudflare, Inc. "Cloudflare", "Cloudflare Zero Trust", and "Cloudflare Access" are trademarks of Cloudflare, Inc.
+> **Disclaimer:** RM Browser is an independent, open-source project and is not affiliated with, endorsed by, or sponsored by Cloudflare, Inc. "Cloudflare", "Cloudflare Zero Trust", and "Cloudflare Access" are trademarks of Cloudflare, Inc.
 
 ---
 
@@ -17,6 +17,11 @@ TunnelDesk is a desktop application that lets you manage Cloudflare Access tunne
 ---
 
 ## Features
+
+### New in RM Browser
+
+- **Privacy mode (blur)** — hostnames, IP addresses, usernames, SSH key paths, jump hosts, notes, account data and the matching form fields are blurred, so you can share your screen or stream without leaking infrastructure details. Hover over a value (or focus an input) to reveal it. On by default; toggle in **Settings → General** or with `Ctrl+Shift+H`.
+- **Connection name as RDP window title** — when you connect to a remote machine, the RDP window shows the name you saved for the connection instead of the local tunnel address (e.g. `Office PC - Remote Desktop Connection` instead of `127.0.0.2:51234 - Remote Desktop Connection`). Works on Windows (mstsc), Linux (FreeRDP `/t:`) and macOS (.rdp file name).
 
 ### Connection types
 
@@ -83,7 +88,7 @@ TunnelDesk is a desktop application that lets you manage Cloudflare Access tunne
 
 ### macOS
 
-- **RDP** — [Microsoft Remote Desktop](https://apps.apple.com/app/microsoft-remote-desktop/id1295203466) from the Mac App Store (free). TunnelDesk generates and opens a `.rdp` file automatically.
+- **RDP** — [Microsoft Remote Desktop](https://apps.apple.com/app/microsoft-remote-desktop/id1295203466) from the Mac App Store (free). RM Browser generates and opens a `.rdp` file automatically.
 - **SSH** — `Terminal.app` is launched via `ssh://` URL. No extra installation needed.
 
 ---
@@ -92,19 +97,19 @@ TunnelDesk is a desktop application that lets you manage Cloudflare Access tunne
 
 ### Download a release
 
-1. Go to the [Releases](https://github.com/5djr/TunnelDesk/releases) page.
+1. Go to the [Releases](https://github.com/DubaiiTM/RM-Browser/releases) page.
 2. Download the installer for your platform.
 3. Run the installer.
 4. On first launch, install `cloudflared` and optionally set its path in Settings if it isn't on `PATH`.
 
-| Platform            | File                         | Notes                                            |
-| ------------------- | ---------------------------- | ------------------------------------------------ |
-| Windows             | `TunnelDesk-x.x.x.msi`       | Standard installer, no admin required (per-user) |
-| Windows             | `TunnelDesk-x.x.x.exe`       | Portable, no install needed                      |
-| Linux x64           | `TunnelDesk-x.x.x.AppImage`  | `chmod +x` then run                              |
-| Linux x64           | `tunneldesk_x.x.x_amd64.deb` | `sudo dpkg -i`                                   |
-| macOS Intel         | `TunnelDesk-x.x.x.dmg`       | Drag to Applications                             |
-| macOS Apple Silicon | `TunnelDesk-x.x.x-arm64.dmg` | Drag to Applications                             |
+| Platform            | File                                 | Notes                                            |
+| ------------------- | ------------------------------------ | ------------------------------------------------ |
+| Windows             | `RM-Browser-x.x.x-x64.msi`           | Standard installer, no admin required (per-user) |
+| Windows             | `RM-Browser-x.x.x-x64.exe`           | Portable, no install needed                      |
+| Linux x64           | `RM-Browser-x.x.x-x86_64.AppImage`   | `chmod +x` then run                              |
+| Linux x64           | `RM-Browser-x.x.x-amd64.deb`         | `sudo dpkg -i`                                   |
+| macOS Intel         | `RM-Browser-x.x.x-x64.dmg`           | Drag to Applications                             |
+| macOS Apple Silicon | `RM-Browser-x.x.x-arm64.dmg`         | Drag to Applications                             |
 
 **macOS note:** Because the build is unsigned for community releases, you may need to right-click → Open the first time to bypass Gatekeeper.
 
@@ -114,19 +119,19 @@ TunnelDesk is a desktop application that lets you manage Cloudflare Access tunne
 
 ### Entra ID / Azure AD sign-in
 
-TunnelDesk uses MSAL v5 with a PKCE public-client flow. No client secret is required.
+RM Browser uses MSAL v5 with a PKCE public-client flow. No client secret is required.
 
 **App registration steps:**
 
 1. In the [Azure portal](https://portal.azure.com), go to **Azure Active Directory → App registrations → New registration**.
-2. Name: anything descriptive (e.g. `TunnelDesk`).
+2. Name: anything descriptive (e.g. `RM Browser`).
 3. Supported account types: choose the appropriate tenant scope for your org.
 4. Redirect URI: select **Public client / native (mobile & desktop)** and enter `http://localhost`.
 5. Under **Authentication**, enable **Allow public client flows**.
 6. Under **API permissions**, ensure `openid`, `profile`, `email`, and `offline_access` are present.
 7. Copy the **Application (client) ID** and **Directory (tenant) ID**.
 
-Enter these values in TunnelDesk under **Settings → Account**.
+Enter these values in RM Browser under **Settings → Account**.
 
 ---
 
@@ -135,13 +140,13 @@ Enter these values in TunnelDesk under **Settings → Account**.
 **Windows** — registry path:
 
 ```
-HKEY_LOCAL_MACHINE\SOFTWARE\Policies\TunnelDesk
+HKEY_LOCAL_MACHINE\SOFTWARE\Policies\RMBrowser
 ```
 
 **Linux** — file path:
 
 ```
-/etc/tunneldesk/policy.json
+/etc/rm-browser/policy.json
 ```
 
 **Supported keys:**
@@ -163,7 +168,7 @@ Policy values lock the corresponding UI fields and show a lock indicator.
 
 ### Org config sync
 
-When `ConfigSyncUrl` is configured (via policy or Settings → Organization), TunnelDesk polls a JSON document and merges org-managed connections into the sidebar. These connections display a lock badge and cannot be edited or deleted.
+When `ConfigSyncUrl` is configured (via policy or Settings → Organization), RM Browser polls a JSON document and merges org-managed connections into the sidebar. These connections display a lock badge and cannot be edited or deleted.
 
 **Policy JSON format:**
 
@@ -205,8 +210,8 @@ The endpoint must return `Content-Type: application/json` and be accessible over
 ### Steps
 
 ```bash
-git clone https://github.com/5djr/TunnelDesk.git
-cd TunnelDesk
+git clone https://github.com/DubaiiTM/RM-Browser.git
+cd RM-Browser
 npm install
 ```
 
@@ -258,7 +263,7 @@ Cross-platform packaging (e.g. building macOS DMG from Windows) is not supported
 | [@azure/msal-node](https://github.com/AzureAD/microsoft-authentication-library-for-js) | MIT        |
 | [electron-builder](https://www.electron.build/)                                        | MIT        |
 
-TunnelDesk launches `cloudflared` as an external process. `cloudflared` is developed by Cloudflare, Inc. and is subject to its own [license](https://github.com/cloudflare/cloudflared/blob/master/LICENSE). TunnelDesk does not bundle or redistribute `cloudflared`.
+RM Browser launches `cloudflared` as an external process. `cloudflared` is developed by Cloudflare, Inc. and is subject to its own [license](https://github.com/cloudflare/cloudflared/blob/master/LICENSE). RM Browser does not bundle or redistribute `cloudflared`.
 
 ---
 
@@ -270,10 +275,12 @@ Bug reports and pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md
 
 ## Security
 
-To report a vulnerability, **do not open a public issue** — email **hello@tym.wtf** instead. See [SECURITY.md](SECURITY.md) for the full policy.
+To report a vulnerability, **do not open a public issue** — use [GitHub private vulnerability reporting](https://github.com/DubaiiTM/RM-Browser/security/advisories/new) instead. See [SECURITY.md](SECURITY.md) for the full policy.
 
 ---
 
 ## License
 
-Copyright (c) 2026 5djr. Released under the [MIT License](LICENSE).
+Copyright (c) 2026 DubaiiTM. Released under the [MIT License](LICENSE).
+
+RM Browser is based on [TunnelDesk](https://github.com/5djr/TunnelDesk) v3.0.0 by 5djr (MIT License, Copyright (c) 2026 5djr).

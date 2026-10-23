@@ -284,6 +284,36 @@ body {
   font-weight: 500;
 }
 
+/* ─── Privacy mode ───────────────────────────────────────────────────────────
+   Blurs identifying details (hostnames, IPs, usernames, keys, account data).
+   Hover or focus reveals an element. Toggle: Settings or Ctrl+Shift+H. */
+[data-privacy="on"] .sensitive,
+[data-privacy="on"] .tunnel-item-host,
+[data-privacy="on"] .detail-subtitle,
+[data-privacy="on"] .prop-notes,
+[data-privacy="on"] .auth-user-name,
+[data-privacy="on"] .auth-user-email,
+[data-privacy="on"] #hostname:not(:focus),
+[data-privacy="on"] #cred-username:not(:focus),
+[data-privacy="on"] #ssh-key-path:not(:focus),
+[data-privacy="on"] #jump-host:not(:focus),
+[data-privacy="on"] #qc-host:not(:focus),
+[data-privacy="on"] #s-entra-client-id:not(:focus),
+[data-privacy="on"] #s-entra-tenant-id:not(:focus),
+[data-privacy="on"] #s-sync-url:not(:focus) {
+  filter: blur(5px);
+  transition: filter 0.15s ease;
+}
+[data-privacy="on"] .sensitive:hover,
+[data-privacy="on"] .tunnel-item-host:hover,
+[data-privacy="on"] .detail-subtitle:hover,
+[data-privacy="on"] .prop-notes:hover,
+[data-privacy="on"] .auth-user-name:hover,
+[data-privacy="on"] .auth-user-email:hover,
+[data-privacy="on"] input:hover {
+  filter: none;
+}
+
 .tunnel-item-host {
   font-size: 11px;
   color: var(--text-muted);

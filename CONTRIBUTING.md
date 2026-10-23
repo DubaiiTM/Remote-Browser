@@ -1,4 +1,4 @@
-# Contributing to TunnelDesk
+# Contributing to RM Browser
 
 Thanks for your interest in contributing. This document covers how to report issues, suggest features, and submit code changes.
 
@@ -6,7 +6,7 @@ Thanks for your interest in contributing. This document covers how to report iss
 
 Open an issue using the **Bug report** template. Include:
 
-- TunnelDesk version and platform (Windows / Linux / macOS)
+- RM Browser version and platform (Windows / Linux / macOS)
 - Steps to reproduce
 - What you expected vs. what happened
 - Any relevant logs (`userData/activity.log`)
@@ -26,13 +26,13 @@ Open an issue using the **Feature request** template. Describe the use case and 
    ```
 4. Open a PR against `main`. Fill out the PR template.
 
-PRs that introduce new IPC channels must wire them in both `src/preload.js` and `src/main/ipc.js`. See the [Architecture section](CLAUDE.md#architecture) for the process boundary rules.
+PRs that introduce new IPC channels must wire them in both `src/preload.js` and `src/main/ipc.js`. Renderer code never touches Node APIs directly; everything goes through the context bridge.
 
 ## Development setup
 
 ```bash
-git clone https://github.com/5djr/TunnelDesk.git
-cd TunnelDesk
+git clone https://github.com/DubaiiTM/RM-Browser.git
+cd RM-Browser
 npm install
 npm run dev
 ```

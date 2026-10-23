@@ -580,7 +580,7 @@ function registerIpcHandlers() {
     const win = BrowserWindow.fromWebContents(event.sender) || state.mainWindow;
     const result = await dialog.showSaveDialog(win, {
       title: "Export Connections",
-      defaultPath: "tunneldesk-connections.json",
+      defaultPath: "rm-browser-connections.json",
       filters: [{ name: "JSON Files", extensions: ["json"] }],
     });
     if (result.canceled) return { canceled: true };
@@ -610,7 +610,7 @@ function registerIpcHandlers() {
       parsed = JSON.parse(await fsP.readFile(result.filePaths[0], "utf8"));
     } catch {
       throw new Error(
-        "Could not read the file — make sure it is a valid TunnelDesk export.",
+        "Could not read the file — make sure it is a valid RM Browser export.",
       );
     }
     if (!Array.isArray(parsed)) throw new Error("Invalid file format.");
@@ -708,7 +708,7 @@ function registerIpcHandlers() {
     const { Notification } = require("electron");
     if (Notification.isSupported()) {
       new Notification({
-        title: String(title || "TunnelDesk").slice(0, 128),
+        title: String(title || "RM Browser").slice(0, 128),
         body: String(body || "").slice(0, 256),
         silent: true,
       }).show();

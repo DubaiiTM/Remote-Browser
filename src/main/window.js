@@ -110,7 +110,7 @@ function createWindow() {
   });
 
   state.mainWindow.webContents.on("render-process-gone", (_event, details) => {
-    console.error("[TunnelDesk] Renderer process gone:", details.reason);
+    console.error("[RM Browser] Renderer process gone:", details.reason);
     if (details.reason !== "clean-exit") {
       try {
         state.mainWindow.loadFile(
@@ -121,7 +121,7 @@ function createWindow() {
   });
 
   state.mainWindow.webContents.on("unresponsive", () => {
-    console.error("[TunnelDesk] Renderer became unresponsive");
+    console.error("[RM Browser] Renderer became unresponsive");
   });
 
   state.mainWindow.on("closed", () => {

@@ -11,6 +11,7 @@ const {
   writeTempRdpFile,
   cleanupTempRdpFile,
 } = require("./rdp-helpers");
+const { watchWindowsRdpTitle } = require("./rdp-title");
 
 const IS_WIN = process.platform === "win32";
 const IS_MAC = process.platform === "darwin";
@@ -235,10 +236,18 @@ function onRdpExit(connectionId, host, port) {
   }
 }
 
+// The name the user saved for this connection, shown as the RDP window title
+// instead of the (meaningless) loopback address the client connects to.
+function connectionTitle(connectionId, fallback) {
+  const conn = activeConnections.get(connectionId)?.connection;
+  return (conn && (conn.friendlyName || conn.hostname)) || fallback;
+}
+
 // ─── RDP launch (via Cloudflare tunnel) ──────────────────────────────────────
 
 async function launchRemoteDesktop(host, port, connectionId, username, password) {
   stopRdpWatcher(connectionId);
+  const title = connectionTitle(connectionId, host);
 
   if (IS_WIN) {
     if (username && password) await storeCredential(host, port, username, password);
@@ -251,6 +260,7 @@ async function launchRemoteDesktop(host, port, connectionId, username, password)
       active.mstscProc = mstsc;
       active.rdpOpen = true;
     }
+    watchWindowsRdpTitle(mstsc, host, port, title);
 
     mstsc.on("exit", () => onRdpExit(connectionId, host, port));
     mstsc.on("error", () => {
@@ -262,7 +272,7 @@ async function launchRemoteDesktop(host, port, connectionId, username, password)
   } else if (IS_MAC) {
     let tmpPath;
     try {
-      tmpPath = await writeTempRdpFile(connectionId, host, port, username);
+      tmpPath = await writeTempRdpFile(connectionId, host, port, username, title);
     } catch (err) {
       sendConnectionLog(connectionId, `Failed to write RDP file: ${err.message}`);
       safeSend("rdp-closed", { id: connectionId });
@@ -299,7 +309,7 @@ async function launchRemoteDesktop(host, port, connectionId, username, password)
       safeSend("rdp-closed", { id: connectionId });
       return;
     }
-    const args = buildXfreeRdpArgs(host, port, username, password, rdpBin);
+    const args = buildXfreeRdpArgs(host, port, username, password, rdpBin, title);
     const rdpProc = spawn(rdpBin, args, { stdio: "ignore" });
     const active = activeConnections.get(connectionId);
     if (active) {
@@ -321,6 +331,7 @@ async function launchRemoteDesktop(host, port, connectionId, username, password)
 
 async function launchRemoteDesktopDirect(connection, password) {
   const { id: connectionId, hostname, port, username } = connection;
+  const title = connection.friendlyName || hostname;
 
   if (IS_WIN && username && password) {
     await storeCredential(hostname, port, username, password);
@@ -343,7 +354,7 @@ async function launchRemoteDesktopDirect(connection, password) {
   } else if (IS_MAC) {
     let tmpPath;
     try {
-      tmpPath = await writeTempRdpFile(connectionId, hostname, port, username);
+      tmpPath = await writeTempRdpFile(connectionId, hostname, port, username, title);
     } catch (err) {
       sendConnectionLog(connectionId, `Failed to write RDP file: ${err.message}`);
       activeConnections.delete(connectionId);
@@ -373,13 +384,14 @@ async function launchRemoteDesktopDirect(connection, password) {
     }
     rdpProc = spawn(
       rdpBin,
-      buildXfreeRdpArgs(hostname, port, username, password, rdpBin),
+      buildXfreeRdpArgs(hostname, port, username, password, rdpBin, title),
       { stdio: "ignore" },
     );
   }
 
   const active = activeConnections.get(connectionId);
   if (active) active.mstscProc = rdpProc;
+  if (IS_WIN) watchWindowsRdpTitle(rdpProc, hostname, port, title);
 
   rdpProc.on("exit", () => {
     const entry = activeConnections.get(connectionId);

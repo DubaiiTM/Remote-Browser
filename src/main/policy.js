@@ -3,7 +3,7 @@
 const { spawnSync } = require("child_process");
 const fs = require("fs");
 
-const POLICY_KEY = "HKLM\\SOFTWARE\\Policies\\TunnelDesk";
+const POLICY_KEY = "HKLM\\SOFTWARE\\Policies\\RMBrowser";
 
 const DWORD_KEYS = new Set(["EnforceSSO", "DisableManualConnections", "SyncInterval"]);
 const STRING_KEYS = new Set([
@@ -42,7 +42,7 @@ function readWindowsPolicy() {
 
 function readLinuxPolicy() {
   try {
-    const raw = fs.readFileSync("/etc/tunneldesk/policy.json", "utf8");
+    const raw = fs.readFileSync("/etc/rm-browser/policy.json", "utf8");
     const parsed = JSON.parse(raw);
     if (typeof parsed === "object" && !Array.isArray(parsed)) return parsed;
   } catch {}
@@ -82,7 +82,7 @@ function normalize(raw) {
 
 function readPolicy() {
   // Windows reads the registry; Linux and macOS share the Unix file reader
-  // (/etc/tunneldesk/policy.json). On an unmanaged machine this returns {} and
+  // (/etc/rm-browser/policy.json). On an unmanaged machine this returns {} and
   // the app runs with no enforced policy — the normal standalone experience.
   const raw = process.platform === "win32" ? readWindowsPolicy() : readLinuxPolicy();
   cached = normalize(raw);

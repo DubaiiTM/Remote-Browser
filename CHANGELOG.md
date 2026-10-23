@@ -1,9 +1,22 @@
 # Changelog
 
-All notable changes to TunnelDesk are documented here.
+All notable changes to RM Browser are documented here. Entries before 1.0.0 are from the upstream project [TunnelDesk](https://github.com/5djr/TunnelDesk).
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
+
+## [1.0.0] - 2026-10-23
+
+First release of RM Browser, based on TunnelDesk 3.0.0.
+
+### Added
+
+- **Privacy mode** — blurs hostnames, IPs, usernames, SSH key paths, jump hosts, notes, account details and the matching form fields; hover/focus reveals. On by default. Toggle in Settings → General or with `Ctrl+Shift+H`.
+- **Connection name as RDP window title** — the RDP window is labelled with the saved connection name instead of the loopback tunnel address (Windows: title rewrite of the mstsc window; Linux: FreeRDP `/t:`; macOS: .rdp file named after the connection).
+
+### Changed
+
+- Renamed the app to **RM Browser** (new app id and user-data folder, policy registry key `HKLM\SOFTWARE\Policies\RMBrowser`, Linux policy path `/etc/rm-browser/policy.json`). Update checks now point to `DubaiiTM/RM-Browser`.
 
 ## [3.0.0] - 2026-06-02
 

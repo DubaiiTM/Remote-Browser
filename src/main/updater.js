@@ -1,7 +1,7 @@
 const https = require("https");
 const { app } = require("electron");
 
-const REPO = "5djr/TunnelDesk";
+const REPO = "DubaiiTM/RM-Browser";
 
 function compareVersions(a, b) {
   const pa = a.replace(/^v/, "").split(".").map(Number);
@@ -22,7 +22,7 @@ function checkForUpdate() {
       `https://api.github.com/repos/${REPO}/releases/latest`,
       {
         headers: {
-          "User-Agent": `TunnelDesk/${current}`,
+          "User-Agent": `RMBrowser/${current}`,
           Accept: "application/vnd.github.v3+json",
         },
         timeout: 8000,

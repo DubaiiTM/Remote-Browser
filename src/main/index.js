@@ -41,7 +41,7 @@ try {
 
 // ─── Global error traps ───────────────────────────────────────────────────────
 process.on("uncaughtException", (err) => {
-  console.error("[TunnelDesk] Uncaught exception:", err);
+  console.error("[RM Browser] Uncaught exception:", err);
   safeSend("connection-log", {
     message: `Internal error: ${err && err.message ? err.message : String(err)}`,
   });
@@ -49,7 +49,7 @@ process.on("uncaughtException", (err) => {
 
 process.on("unhandledRejection", (reason) => {
   const msg = reason instanceof Error ? reason.message : String(reason ?? "unknown");
-  console.error("[TunnelDesk] Unhandled rejection:", reason);
+  console.error("[RM Browser] Unhandled rejection:", reason);
   safeSend("connection-log", { message: `Internal error: ${msg}` });
 });
 
@@ -128,7 +128,7 @@ app.whenReady().then(async () => {
     }
   } catch (err) {
     dialog.showErrorBox(
-      "TunnelDesk failed to start",
+      "RM Browser failed to start",
       `Startup error: ${err && err.message ? err.message : String(err)}\n\nThe application will now close.`,
     );
     app.exit(1);

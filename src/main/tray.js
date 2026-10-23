@@ -45,16 +45,16 @@ async function rebuildMenu() {
   });
 
   const menu = Menu.buildFromTemplate([
-    { label: "TunnelDesk", enabled: false },
+    { label: "RM Browser", enabled: false },
     { type: "separator" },
     ...(tunnelItems.length > 0
       ? tunnelItems
       : [{ label: "No tunnels configured", enabled: false }]),
     { type: "separator" },
-    { label: "Open TunnelDesk", click: showWindow },
+    { label: "Open RM Browser", click: showWindow },
     { type: "separator" },
     {
-      label: "Quit TunnelDesk",
+      label: "Quit RM Browser",
       click: () => {
         state.forceQuit = true;
         app.quit();
@@ -72,7 +72,7 @@ function createTray(connectFn, disconnectFn) {
   const iconFile = process.platform === "win32" ? "icon.ico" : "icon.png";
   const iconPath = path.join(__dirname, "..", "..", "assets", iconFile);
   tray = new Tray(iconPath);
-  tray.setToolTip("TunnelDesk");
+  tray.setToolTip("RM Browser");
   tray.on("double-click", showWindow);
   rebuildMenu();
   return tray;

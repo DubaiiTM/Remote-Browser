@@ -24,7 +24,7 @@ What actually happened. Include any error messages or logs (`userData/activity.l
 
 ## Environment
 
-- **TunnelDesk version**:
+- **RM Browser version**:
 - **OS / platform**: Windows / Linux / macOS
 - **OS version** (e.g. Windows 11 24H2, Ubuntu 24.04):
 - **Protocol affected** (SSH / RDP / Telnet / HTTP):

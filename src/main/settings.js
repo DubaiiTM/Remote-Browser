@@ -22,6 +22,7 @@ const DEFAULTS = {
   configSyncUrl: "",
   configSyncInterval: 300,
   reduceGpuUsage: false,
+  privacyMode: true,
 };
 
 const VALID_PROTOCOLS = new Set([
@@ -144,6 +145,9 @@ async function writeSettings(partial) {
       60,
       Math.min(86400, Math.floor(partial.configSyncInterval)),
     );
+  }
+  if (typeof partial.privacyMode === "boolean") {
+    safe.privacyMode = partial.privacyMode;
   }
   if (typeof partial.reduceGpuUsage === "boolean") {
     safe.reduceGpuUsage = partial.reduceGpuUsage;

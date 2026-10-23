@@ -133,6 +133,7 @@ interface Settings {
   configSyncUrl: string;
   configSyncInterval: number;
   reduceGpuUsage: boolean;
+  privacyMode: boolean;
 }
 
 type TermTabType = "term" | "sftp";
@@ -327,6 +328,23 @@ function applyTheme(theme: "dark" | "light" | "system") {
   const resolved =
     theme === "system" ? (systemThemeMq.matches ? "dark" : "light") : theme;
   document.documentElement.dataset.theme = resolved;
+}
+
+// Privacy mode blurs hostnames, IPs, usernames and other identifying details
+// (see the [data-privacy] rules in style.css). Hovering an element reveals it.
+function applyPrivacy(on: boolean) {
+  document.documentElement.dataset.privacy = on ? "on" : "off";
+}
+
+async function togglePrivacy() {
+  const next = !(currentSettings?.privacyMode ?? true);
+  applyPrivacy(next);
+  try {
+    currentSettings = await window.api.saveSettings({ privacyMode: next });
+  } catch {}
+  const box = document.getElementById("s-privacy-mode") as HTMLInputElement | null;
+  if (box) box.checked = next;
+  showToast(next ? "Privacy mode on — sensitive data blurred." : "Privacy mode off.", "success");
 }
 
 systemThemeMq.addEventListener("change", () => {
@@ -1372,9 +1390,9 @@ async function updateDebugStats(connId: string) {
     const connSection = [
       row("Tunnel", escapeHtml(conn ? conn.friendlyName || conn.hostname : "—")),
       row("Protocol", escapeHtml(protocolLabel(proto))),
-      row(isCfTunnel ? "Tunnel bind" : "Endpoint", escapeHtml(s.localEndpoint)),
-      row("Remote host", escapeHtml(s.hostname)),
-      conn?.username ? row("Username", escapeHtml(conn.username)) : "",
+      row(isCfTunnel ? "Tunnel bind" : "Endpoint", escapeHtml(s.localEndpoint), "sensitive"),
+      row("Remote host", escapeHtml(s.hostname), "sensitive"),
+      conn?.username ? row("Username", escapeHtml(conn.username), "sensitive") : "",
     ].join("");
 
     const sessionSection = [
@@ -1429,13 +1447,13 @@ async function updateDebugStats(connId: string) {
     const ipRows = s.localIps.length
       ? s.localIps
           .map((ip) =>
-            row("IP", `${escapeHtml(ip.address)} ${dim(`(${escapeHtml(ip.name)})}`)}`),
+            row("IP", `${escapeHtml(ip.address)} ${dim(`(${escapeHtml(ip.name)})}`)}`, "sensitive"),
           )
           .join("")
       : row("IP", dim("none detected"));
     const systemSection = [
       row("OS", escapeHtml(s.systemOs)),
-      row("Hostname", escapeHtml(s.systemHostname)),
+      row("Hostname", escapeHtml(s.systemHostname), "sensitive"),
       ipRows,
       row("RAM free", formatBytes(s.systemRamFree)),
       row("RAM total", formatBytes(s.systemRamTotal)),
@@ -3188,7 +3206,7 @@ function renderDetail() {
   const sshKeyRow = conn.hasSshKey
     ? `<div class="prop-row">
            <span class="prop-label">SSH Key</span>
-           <span class="prop-value mono">${escapeHtml(conn.sshKeyPath)}</span>
+           <span class="prop-value mono sensitive">${escapeHtml(conn.sshKeyPath)}</span>
          </div>`
     : "";
 
@@ -3203,7 +3221,7 @@ function renderDetail() {
     : "";
 
   const jumpRow = conn.jumpHost
-    ? `<div class="prop-row"><span class="prop-label">Jump Host</span><span class="prop-value mono">${escapeHtml(conn.jumpHost)}:${conn.jumpPort ?? 22}</span></div>`
+    ? `<div class="prop-row"><span class="prop-label">Jump Host</span><span class="prop-value mono sensitive">${escapeHtml(conn.jumpHost)}:${conn.jumpPort ?? 22}</span></div>`
     : "";
 
   detailPanel.innerHTML = `
@@ -3246,7 +3264,7 @@ function renderDetail() {
     <div class="prop-list">
       <div class="prop-row">
         <span class="prop-label">${proto === "serial" ? "Device" : "Endpoint"}</span>
-        <span class="prop-value mono">${escapeHtml(endpoint)} ${copyEndpointBtn}</span>
+        <span class="prop-value mono"><span class="sensitive">${escapeHtml(endpoint)}</span> ${copyEndpointBtn}</span>
       </div>
       ${
         proto === "serial"
@@ -3266,7 +3284,7 @@ function renderDetail() {
         conn.username || conn.hasPassword
           ? `<div class="prop-row">
                <span class="prop-label">Credentials</span>
-               <span class="prop-value">${credValue}</span>
+               <span class="prop-value sensitive">${credValue}</span>
              </div>`
           : ""
       }
@@ -3316,7 +3334,7 @@ function renderEmptyState() {
   detailPanel.innerHTML = `
     <div class="detail-empty">
       <div class="detail-empty-icon"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
-      <div class="detail-empty-title">Welcome to TunnelDesk</div>
+      <div class="detail-empty-title">Welcome to RM Browser</div>
       <div class="detail-empty-sub">Get started in 3 steps</div>
       <div class="onboarding-steps">
         <div class="onboarding-step">
@@ -3338,7 +3356,7 @@ function renderEmptyState() {
           <div class="onboarding-step-num">3</div>
           <div class="onboarding-step-body">
             <div class="onboarding-step-title">Connect</div>
-            <div class="onboarding-step-desc">Select your tunnel and click Connect. TunnelDesk handles the cloudflared tunnel and launches your client.</div>
+            <div class="onboarding-step-desc">Select your tunnel and click Connect. RM Browser handles the cloudflared tunnel and launches your client.</div>
           </div>
         </div>
       </div>
@@ -3460,10 +3478,10 @@ function renderSettingsPanel() {
         <div class="settings-row settings-row--col">
           <div class="settings-row-label">
             <span class="settings-label">Config sync URL</span>
-            <span class="settings-desc">HTTPS URL to a <code>tunneldesk-policy.json</code> file published by your admin (Azure Blob, SharePoint CDN, or any static HTTPS host).</span>
+            <span class="settings-desc">HTTPS URL to a <code>rm-browser-policy.json</code> file published by your admin (Azure Blob, SharePoint CDN, or any static HTTPS host).</span>
           </div>
           <input class="form-input" type="text" id="s-sync-url"
-            placeholder="https://company.blob.core.windows.net/config/tunneldesk-policy.json"
+            placeholder="https://company.blob.core.windows.net/config/rm-browser-policy.json"
             value="${escapeHtml(effectiveSyncUrl)}"
             ${syncUrlLocked ? "disabled" : ""}
             style="margin-top:8px"
@@ -3518,8 +3536,18 @@ function renderSettingsPanel() {
         </div>
         <div class="settings-row">
           <div class="settings-row-label">
+            <span class="settings-label">Privacy mode</span>
+            <span class="settings-desc">Blur hostnames, IPs, usernames and other sensitive details. Hover to reveal. Toggle anytime with Ctrl+Shift+H.</span>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="s-privacy-mode" ${(s.privacyMode ?? true) ? "checked" : ""}>
+            <span class="toggle-track"></span>
+          </label>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-label">
             <span class="settings-label">Minimize to tray on close</span>
-            <span class="settings-desc">Keep TunnelDesk running in the background when you close the window.</span>
+            <span class="settings-desc">Keep RM Browser running in the background when you close the window.</span>
           </div>
           <label class="toggle">
             <input type="checkbox" id="s-minimize-tray" ${s.minimizeToTray ? "checked" : ""}>
@@ -3529,7 +3557,7 @@ function renderSettingsPanel() {
         <div class="settings-row">
           <div class="settings-row-label">
             <span class="settings-label">Start minimized</span>
-            <span class="settings-desc">Launch TunnelDesk directly to the system tray without showing the window.</span>
+            <span class="settings-desc">Launch RM Browser directly to the system tray without showing the window.</span>
           </div>
           <label class="toggle">
             <input type="checkbox" id="s-start-minimized" ${s.startMinimized ? "checked" : ""}>
@@ -3825,6 +3853,8 @@ function renderSettingsPanel() {
       (document.getElementById("s-auto-reconnect") as HTMLInputElement)?.checked ?? true;
     const reduceGpuUsage =
       (document.getElementById("s-reduce-gpu") as HTMLInputElement)?.checked ?? false;
+    const privacyMode =
+      (document.getElementById("s-privacy-mode") as HTMLInputElement)?.checked ?? true;
     const gpuChanged = reduceGpuUsage !== (currentSettings?.reduceGpuUsage ?? false);
     const osCacheDurationHours =
       Number((document.getElementById("s-os-cache") as HTMLSelectElement)?.value) || 6;
@@ -3860,11 +3890,13 @@ function renderSettingsPanel() {
         configSyncUrl,
         configSyncInterval,
         reduceGpuUsage,
+        privacyMode,
       });
       applyTheme(theme);
+      applyPrivacy(privacyMode);
       showToast(
         gpuChanged
-          ? "Settings saved. Restart TunnelDesk to apply the GPU change."
+          ? "Settings saved. Restart RM Browser to apply the GPU change."
           : "Settings saved.",
         "success",
       );
@@ -4168,6 +4200,11 @@ settingsBtn.addEventListener("click", async () => {
 // ─── Keyboard Shortcuts ───────────────────────────────────────────────────────
 
 document.addEventListener("keydown", (e) => {
+  if (e.ctrlKey && e.shiftKey && (e.key === "H" || e.key === "h")) {
+    e.preventDefault();
+    void togglePrivacy();
+    return;
+  }
   if (isModalOpen() || isEditing()) return;
 
   if (e.key === "?" && !e.ctrlKey && !e.altKey) {
@@ -4301,6 +4338,7 @@ if (!IS_TERMINAL_WINDOW && !IS_FORM_WINDOW && !IS_QC_WINDOW && !IS_CONFIRM_WINDO
 // Keep currentSettings in sync across all windows (e.g. osCache saved from terminal window).
 window.api.onSettingsDidChange((settings) => {
   currentSettings = settings;
+  applyPrivacy(settings.privacyMode ?? true);
   if (!IS_TERMINAL_WINDOW && !IS_FORM_WINDOW && !IS_QC_WINDOW && !IS_CONFIRM_WINDOW) {
     renderSidebar();
   }
@@ -4340,7 +4378,7 @@ if (!IS_TERMINAL_WINDOW && !IS_FORM_WINDOW && !IS_QC_WINDOW && !IS_CONFIRM_WINDO
     // Validate protocol before touching the DOM — prevents a javascript: href
     // from being navigated via keyboard/middle-click if main process is compromised.
     if (typeof url !== "string" || !url.startsWith("https://")) return;
-    updateBannerText.textContent = `TunnelDesk v${version} is available —`;
+    updateBannerText.textContent = `RM Browser v${version} is available —`;
     updateBannerLink.href = url;
     updateBannerLink.addEventListener("click", (e) => {
       e.preventDefault();
@@ -4369,13 +4407,13 @@ if (!IS_TERMINAL_WINDOW) {
       if (prev === "connecting") {
         appendLog(`Connection failed — ${connName(data.id)}`);
         void window.api.showNotification(
-          "TunnelDesk",
+          "RM Browser",
           `Connection failed — ${connName(data.id)}`,
         );
       } else if (prev === "connected") {
         appendLog(`Tunnel disconnected — ${connName(data.id)}`);
         void window.api.showNotification(
-          "TunnelDesk",
+          "RM Browser",
           `Disconnected — ${connName(data.id)}`,
         );
       }
@@ -4383,7 +4421,7 @@ if (!IS_TERMINAL_WINDOW) {
       authPendingUrls.delete(data.id);
       sessionConnectedAt.set(data.id, Date.now());
       appendLog(`Tunnel connected — ${connName(data.id)}`);
-      void window.api.showNotification("TunnelDesk", `Connected — ${connName(data.id)}`);
+      void window.api.showNotification("RM Browser", `Connected — ${connName(data.id)}`);
     }
     renderSidebar();
     renderDetail();
@@ -4604,6 +4642,7 @@ async function initConfirmWindow(): Promise<void> {
     currentSettings = await window.api.getSettings();
   } catch {}
   applyTheme(currentSettings?.theme ?? "dark");
+  applyPrivacy(currentSettings?.privacyMode ?? true);
 }
 
 // ─── Quick Connect window initializer ────────────────────────────────────────
@@ -4621,6 +4660,7 @@ async function initQcWindow(): Promise<void> {
     currentSettings = await window.api.getSettings();
   } catch {}
   applyTheme(currentSettings?.theme ?? "dark");
+  applyPrivacy(currentSettings?.privacyMode ?? true);
   initCustomSelects(root);
   setTimeout(() => qcHost?.focus(), 50);
 }
@@ -4773,6 +4813,7 @@ function showShortcutsOverlay() {
       <div class="shortcut-row"><span>Reset zoom</span><kbd>Ctrl+0</kbd></div>
       <div class="shortcut-row"><span>Rename tab</span><kbd>Double-click tab</kbd></div>
       <div class="shortcuts-section">Other</div>
+      <div class="shortcut-row"><span>Privacy mode (blur)</span><kbd>Ctrl+Shift+H</kbd></div>
       <div class="shortcut-row"><span>This help</span><kbd>?</kbd></div>
     </div>
   `;
@@ -4904,6 +4945,7 @@ async function init() {
     currentSettings = await window.api.getSettings();
   } catch {}
   applyTheme(currentSettings?.theme ?? "dark");
+  applyPrivacy(currentSettings?.privacyMode ?? true);
 
   // Load policy and auth state in background; UI handles missing gracefully.
   void window.api

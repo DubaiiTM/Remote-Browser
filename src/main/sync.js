@@ -81,7 +81,7 @@ function fetchUrl(url) {
         path: (target.pathname || "/") + (target.search || ""),
         method: "GET",
         timeout: 10000,
-        headers: { "User-Agent": "TunnelDesk/1.0" },
+        headers: { "User-Agent": "RMBrowser/1.0" },
       },
       (res) => {
         if (res.statusCode < 200 || res.statusCode >= 300) {
@@ -168,7 +168,7 @@ async function startSync(syncUrl, intervalSeconds) {
     interval = Math.max(60, result.syncInterval || interval);
   } catch (err) {
     lastSyncError = err.message;
-    console.error("[TunnelDesk] Initial sync failed:", err.message);
+    console.error("[RM Browser] Initial sync failed:", err.message);
   }
 
   syncTimer = setInterval(async () => {
@@ -176,7 +176,7 @@ async function startSync(syncUrl, intervalSeconds) {
       await fetchAndApply(syncUrl);
     } catch (err) {
       lastSyncError = err.message;
-      console.error("[TunnelDesk] Sync failed:", err.message);
+      console.error("[RM Browser] Sync failed:", err.message);
     }
   }, interval * 1000);
 }

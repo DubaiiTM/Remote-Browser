@@ -1,8 +1,8 @@
 {
-  "name": "tunneldesk",
-  "productName": "TunnelDesk",
-  "version": "3.0.0",
-  "description": "Cloudflare Zero Trust connection manager for Windows, Linux, and macOS",
+  "name": "rm-browser",
+  "productName": "RM Browser",
+  "version": "1.0.0",
+  "description": "Remote connection manager (RDP, SSH, Telnet, Serial, Cloudflare Zero Trust) with privacy mode — based on TunnelDesk",
   "main": "src/main/index.js",
   "scripts": {
     "start": "electron .",
@@ -15,9 +15,10 @@
     "rebuild": "electron-rebuild -f -w serialport"
   },
   "build": {
-    "appId": "com.tunneldesk.app",
-    "productName": "TunnelDesk",
-    "copyright": "TunnelDesk",
+    "appId": "com.dubaiitm.rmbrowser",
+    "productName": "RM Browser",
+    "artifactName": "RM-Browser-${version}-${arch}.${ext}",
+    "copyright": "RM Browser",
     "icon": "assets/icon.png",
     "npmRebuild": false,
     "directories": {
@@ -55,7 +56,7 @@
       "perMachine": false,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "TunnelDesk",
+      "shortcutName": "RM Browser",
       "runAfterFinish": true
     },
     "linux": {
@@ -77,7 +78,7 @@
       ],
       "icon": "assets/icon.png",
       "category": "Network",
-      "description": "Cloudflare Zero Trust connection manager"
+      "description": "Remote connection manager with privacy mode"
     },
     "mac": {
       "target": [
@@ -103,7 +104,7 @@
       "gatekeeperAssess": false
     },
     "dmg": {
-      "title": "TunnelDesk",
+      "title": "RM Browser",
       "contents": [
         {
           "x": 130,
@@ -152,19 +153,19 @@
     "azure",
     "entra-id",
     "remote-desktop",
-    "vpn-alternative"
+    "vpn-alternative",
+    "privacy-mode"
   ],
-  "homepage": "https://github.com/5djr/TunnelDesk",
+  "homepage": "https://github.com/DubaiiTM/RM-Browser",
   "bugs": {
-    "url": "https://github.com/5djr/TunnelDesk/issues"
+    "url": "https://github.com/DubaiiTM/RM-Browser/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/5djr/TunnelDesk.git"
+    "url": "https://github.com/DubaiiTM/RM-Browser.git"
   },
   "author": {
-    "name": "TunnelDesk",
-    "email": "hello@tym.wtf"
+    "name": "DubaiiTM"
   },
   "license": "MIT"
 }

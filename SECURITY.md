@@ -13,11 +13,11 @@ Only the latest release receives security fixes. Older versions are not patched.
 
 **Do not open a public GitHub issue for security vulnerabilities.**
 
-Send a report to **hello@tym.wtf** with:
+Report it privately via [GitHub private vulnerability reporting](https://github.com/DubaiiTM/RM-Browser/security/advisories/new) with:
 
 - A description of the vulnerability and its potential impact
 - Steps to reproduce or a proof-of-concept (if applicable)
-- TunnelDesk version and platform
+- RM Browser version and platform
 
 You can expect an acknowledgement within 48 hours. If a fix is needed, a patched release will be published and you will be credited in the changelog (unless you prefer to remain anonymous).
 
@@ -33,6 +33,6 @@ Areas of particular interest:
 
 ## Out of scope
 
-- Vulnerabilities in `cloudflared`, `mstsc`, `xfreerdp`, or other external tools launched by TunnelDesk
+- Vulnerabilities in `cloudflared`, `mstsc`, `xfreerdp`, or other external tools launched by RM Browser
 - Issues that require physical access to the machine
 - Social engineering
