@@ -106,8 +106,8 @@ RM Browser is a desktop application that lets you manage Cloudflare Access tunne
 | ------------------- | ------------------------------------ | ------------------------------------------------ |
 | Windows             | `RM-Browser-x.x.x-x64.msi`           | Standard installer, no admin required (per-user) |
 | Windows             | `RM-Browser-x.x.x-x64.exe`           | Portable, no install needed                      |
-| Linux x64           | `RM-Browser-x.x.x-x64.AppImage`      | `chmod +x` then run                              |
-| Linux x64           | `RM-Browser-x.x.x-x64.deb`           | `sudo dpkg -i`                                   |
+| Linux x64           | `RM-Browser-x.x.x-x86_64.AppImage`   | `chmod +x` then run                              |
+| Linux x64           | `RM-Browser-x.x.x-amd64.deb`         | `sudo dpkg -i`                                   |
 | Linux arm64         | `RM-Browser-x.x.x-arm64.AppImage`    | `chmod +x` then run                              |
 | Linux arm64         | `RM-Browser-x.x.x-arm64.deb`         | `sudo dpkg -i`                                   |
 | macOS Intel         | `RM-Browser-x.x.x-x64.dmg`           | Drag to Applications                             |
